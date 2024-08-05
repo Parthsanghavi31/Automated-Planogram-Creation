@@ -1,7 +1,7 @@
 import pandas as pd
 
 class Product:
-    def __init__(self, id, width, height):
+    def __init__(self, id, height, width):
         self.id = id
         self.width = width
         self.height = height
@@ -31,35 +31,35 @@ class Bin:
     def __repr__(self):
         return f"Bin(Current Width: {self.current_width}/{self.max_width}, Products: {self.products})"
     
-def fit_products_into_bins(products, bin_max_width, max_bins):
-    bins = [Bin(bin_max_width) for _ in range(max_bins)]
-    skipped_products = []  # To keep track of products that didn't fit initially
+def fit_products_into_bins(products, bin_max_width):
+    bins = []
 
-    # Attempt to place each product
-    for product in sorted(products, key=lambda x: (x.width, x.height), reverse=True):
-        placed = False
-        for bin in bins:
-            if bin.add_products(product):
-                placed = True
-                break
-        
-        if not placed:
-            skipped_products.append(product)
-    # print("\n Total number of Skipped products ", len(skipped_products))
+    # No need to sort products by height unless it aligns with specific packing requirements
+    for product in products:  # Consider products in their natural order or sort them based on your preference
+        best_bin = None
+        min_space_left = float('inf')
 
-    for product in sorted(skipped_products, key=lambda x: (x.width, x.height)):  # Smaller products first
-        placed = False
+        # Find the best bin that leaves the least space after adding this product
         for bin in bins:
-            if bin.add_products(product):
-                placed = True
-                break
-        if not placed:
-            print(f"Could not finally place Product {product.id}. All bins are full.")
+            if bin.current_width + product.width <= bin.max_width:
+                space_left = bin.max_width - (bin.current_width + product.width)
+                if space_left < min_space_left:
+                    min_space_left = space_left
+                    best_bin = bin
+
+        # Add the product to the best bin found, or create a new bin if no suitable bin exists
+        if best_bin is not None:
+            best_bin.add_products(product)
+        else:
+            new_bin = Bin(bin_max_width)
+            new_bin.add_products(product)
+            bins.append(new_bin)
 
     return bins
+   
+   
 
-
-def simulate_vending_machine(bins):
+def simulate_vending_machine(products, bins):
     # Set up one bin per row, so number of rows equals the number of bins
     grid_rows = len(bins)
     grid_columns = 1  # One column since only one bin per row
@@ -80,29 +80,22 @@ def simulate_vending_machine(bins):
             
 def main():
     products = [
-        Product(1, 6, 3),
-        Product(2, 6, 4),
-        Product(3, 6, 5),
-        Product(4, 6, 4),
-        Product(5, 10, 7),
-        Product(6, 6, 5),
-        Product(7, 6, 4),
+        Product(1, 2, 3),
+        Product(2, 3, 4),
+        Product(3, 4, 5),
+        Product(4, 3, 4),
+        Product(5, 6, 7),
+        Product(6, 4, 5),
+        Product(7, 4, 4),
         Product(8, 6, 8),
-        Product(9, 7, 6),
-        Product(10, 1, 1),
-        Product(11, 1, 1),
-        Product(12, 2, 1),
-        Product(13, 1, 1),
-        Product(14, 1, 1),
-        Product(15, 1, 1),
-        Product(16, 1, 1),
-        Product(17, 3, 4)  
+        Product(9, 3, 6),
+        Product(10, 3, 5),
+               
     ]
     
     bin_max_width = 10
-    max_bins = 4
     
-    bins = fit_products_into_bins(products, bin_max_width, max_bins)
+    bins = fit_products_into_bins(products, bin_max_width)
     
     for product in products:
         print(product)
@@ -113,16 +106,9 @@ def main():
     for bin in bins:
         print(bin) 
     
-    grid_df = simulate_vending_machine(bins)
+    grid_df = simulate_vending_machine(products, bins)
     print("\n Planogram Layout")
     print(grid_df)
     
 if __name__ == "__main__":
     main()
-    
-    
-            
-        
-        
-        
-        
