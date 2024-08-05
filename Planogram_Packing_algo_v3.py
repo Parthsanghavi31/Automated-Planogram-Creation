@@ -26,7 +26,9 @@ class Bin:
             self.products.append(product)
             self.current_width += product.width
             self.current_height = max(self.current_height, product.height)
+            print(f"Added Product {product.id} to bin: Current bin dimensions are width={self.current_width}/{self.max_width}, height={self.current_height}/{self.max_height}")
             return True
+        print(f"Failed to add Product {product.id}: Exceeds bin dimensions with width={product.width}, height={product.height} when added to current width={self.current_width}, height={self.current_height}")
         return False
 
     def __repr__(self):
@@ -37,7 +39,7 @@ def fit_products_into_bins(products, bin_max_width, max_height, total_machine_he
     total_height_used = 0
     skipped_products = []
 
-    # Sort products by a heuristic that considers both dimensions
+    # sorting by considering both the dimesnisons
     products.sort(key=lambda x: (x.height * x.width / x.height), reverse=True)
 
     for product in products:
@@ -45,6 +47,7 @@ def fit_products_into_bins(products, bin_max_width, max_height, total_machine_he
         for bin in bins:
             if bin.can_add_product(product) and total_height_used + bin.current_height <= total_machine_height:
                 if bin.add_product(product):
+                    print(product)
                     placed = True
                     break
 
@@ -83,15 +86,15 @@ def simulate_vending_machine(bins):
 
 def main():
     products = [
-        Product(1, 6, 3), Product(2, 6, 4), Product(3, 6, 5), Product(4, 6, 4),
-        Product(5, 10, 7), Product(6, 6, 5), Product(7, 6, 4), Product(8, 6, 8),
+        Product(1, 6, 10), Product(2, 4, 4), Product(3, 3, 5), Product(4, 6, 4),
+        Product(5, 1, 7), Product(6, 6, 5), Product(7, 6, 4), Product(8, 6, 8),
         Product(9, 7, 6), Product(10, 1, 1), Product(11, 1, 1), Product(12, 2, 1),
         Product(13, 1, 1), Product(14, 1, 1), Product(15, 1, 1), Product(16, 1, 1),
         Product(17, 3, 4)
     ]
     bin_max_width = 10
     max_height = 20
-    total_machine_height = 30
+    total_machine_height = 25
 
     bins = fit_products_into_bins(products, bin_max_width, max_height, total_machine_height)
     

@@ -79,27 +79,15 @@ def simulate_vending_machine(bins):
             
 def main():
     products = [
-        Product(1, 6, 3),
-        Product(2, 6, 4),
-        Product(3, 6, 5),
-        Product(4, 6, 4),
-        Product(5, 10, 7),
-        Product(6, 6, 5),
-        Product(7, 6, 4),
-        Product(8, 6, 8),
-        Product(9, 7, 6),
-        Product(10, 1, 1),
-        Product(11, 1, 1),
-        Product(12, 2, 1),
-        Product(13, 1, 1),
-        Product(14, 1, 1),
-        Product(15, 1, 1),
-        Product(16, 1, 1),
-        Product(17, 3, 4)  
+        Product(1, 6, 10), Product(2, 4, 4), Product(3, 3, 5), Product(4, 6, 4),
+        Product(5, 1, 7), Product(6, 6, 5), Product(7, 6, 4), Product(8, 6, 8),
+        Product(9, 7, 6), Product(10, 1, 1), Product(11, 1, 1), Product(12, 2, 1),
+        Product(13, 1, 1), Product(14, 1, 1), Product(15, 1, 1), Product(16, 1, 1),
+        Product(17, 3, 4)
     ]
     
     bin_max_width = 10
-    max_bins = 7
+    max_bins = 4
     
     bins = fit_products_into_bins(products, bin_max_width, max_bins)
     
