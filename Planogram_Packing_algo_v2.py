@@ -33,10 +33,9 @@ class Bin:
     
 def fit_products_into_bins(products, bin_max_width, max_bins):
     bins = [Bin(bin_max_width) for _ in range(max_bins)]
-    skipped_products = []  # To keep track of products that didn't fit initially
-
-    # Attempt to place each product
-    for product in sorted(products, key=lambda x: (x.width, x.height), reverse=True):
+    skipped_products = [] 
+   
+    for product in sorted(products, key=lambda x: x.width, reverse=True):
         placed = False
         for bin in bins:
             if bin.add_products(product):
@@ -47,7 +46,7 @@ def fit_products_into_bins(products, bin_max_width, max_bins):
             skipped_products.append(product)
     # print("\n Total number of Skipped products ", len(skipped_products))
 
-    for product in sorted(skipped_products, key=lambda x: (x.width, x.height)):  # Smaller products first
+    for product in sorted(skipped_products, key=lambda x: x.width):  # Smaller products first
         placed = False
         for bin in bins:
             if bin.add_products(product):
@@ -100,7 +99,7 @@ def main():
     ]
     
     bin_max_width = 10
-    max_bins = 4
+    max_bins = 7
     
     bins = fit_products_into_bins(products, bin_max_width, max_bins)
     
