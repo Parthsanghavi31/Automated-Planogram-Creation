@@ -1,0 +1,51 @@
+Name,SKU,Width,Height,Depth
+Coca-Cola 12oz Can,CC12CAN,2.6,4.83,2.6
+Pepsi 12oz Can,PE12CAN,2.6,4.83,2.6
+Red Bull 8.4oz Can,RB84CAN,2.1,5.2,2.1
+Monster Energy 16oz Can,ME16CAN,2.7,6.2,2.7
+Sprite 12oz Can,SP12CAN,2.6,4.83,2.6
+Mountain Dew 12oz Can,MD12CAN,2.6,4.83,2.6
+Diet Coke 12oz Can,DC12CAN,2.6,4.83,2.6
+Dr Pepper 12oz Can,DP12CAN,2.6,4.83,2.6
+Gatorade 20oz Bottle,GA20BOT,3.0,8.5,3.0
+Powerade 20oz Bottle,PO20BOT,3.0,8.5,3.0
+Coca-Cola 20oz Bottle,CC20BOT,3.0,8.5,3.0
+Pepsi 20oz Bottle,PE20BOT,3.0,8.5,3.0
+Red Bull 12oz Can,RB12CAN,2.5,5.5,2.5
+Monster Energy 24oz Can,ME24CAN,2.8,7.5,2.8
+Sprite 20oz Bottle,SP20BOT,3.0,8.5,3.0
+Mountain Dew 20oz Bottle,MD20BOT,3.0,8.5,3.0
+Diet Coke 20oz Bottle,DC20BOT,3.0,8.5,3.0
+Dr Pepper 20oz Bottle,DP20BOT,3.0,8.5,3.0
+Gatorade 32oz Bottle,GA32BOT,3.5,10.0,3.5
+Powerade 32oz Bottle,PO32BOT,3.5,10.0,3.5
+Coca-Cola 2L Bottle,CC2LBOT,4.0,12.0,4.0
+Pepsi 2L Bottle,PE2LBOT,4.0,12.0,4.0
+Sprite 2L Bottle,SP2LBOT,4.0,12.0,4.0
+Mountain Dew 2L Bottle,MD2LBOT,4.0,12.0,4.0
+Diet Coke 2L Bottle,DC2LBOT,4.0,12.0,4.0
+Dr Pepper 2L Bottle,DP2LBOT,4.0,12.0,4.0
+Gatorade 64oz Bottle,GA64BOT,4.5,11.5,4.5
+Powerade 64oz Bottle,PO64BOT,4.5,11.5,4.5
+Coca-Cola 16.9oz Bottle,CC169BOT,2.7,8.0,2.7
+Pepsi 16.9oz Bottle,PE169BOT,2.7,8.0,2.7
+Sprite 16.9oz Bottle,SP169BOT,2.7,8.0,2.7
+Mountain Dew 16.9oz Bottle,MD169BOT,2.7,8.0,2.7
+Diet Coke 16.9oz Bottle,DC169BOT,2.7,8.0,2.7
+Dr Pepper 16.9oz Bottle,DP169BOT,2.7,8.0,2.7
+Gatorade 12oz Bottle,GA12BOT,3.2,6.5,3.2
+Powerade 12oz Bottle,PO12BOT,3.2,6.5,3.2
+Red Bull 16oz Can,RB16CAN,2.7,6.2,2.7
+Monster Energy 32oz Can,ME32CAN,3.1,10.0,3.1
+Sprite 8oz Can,SP8CAN,2.3,4.83,2.3
+Coca-Cola 8oz Can,CC8CAN,2.3,4.83,2.3
+Pepsi 8oz Can,PE8CAN,2.3,4.83,2.3
+Mountain Dew 8oz Can,MD8CAN,2.3,4.83,2.3
+Diet Coke 8oz Can,DC8CAN,2.3,4.83,2.3
+Dr Pepper 8oz Can,DP8CAN,2.3,4.83,2.3
+Coca-Cola 12oz Glass Bottle,CC12GLS,2.7,7.5,2.7
+Pepsi 12oz Glass Bottle,PE12GLS,2.7,7.5,2.7
+Sprite 12oz Glass Bottle,SP12GLS,2.7,7.5,2.7
+Mountain Dew 12oz Glass Bottle,MD12GLS,2.7,7.5,2.7
+Diet Coke 12oz Glass Bottle,DC12GLS,2.7,7.5,2.7
+Dr Pepper 12oz Glass Bottle,DP12GLS,2.7,7.5,2.7
