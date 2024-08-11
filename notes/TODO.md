@@ -6,3 +6,5 @@
  - Rearrange the bins according to weight?? (Lower the CoG)
  - Grid cell reservation.
  - Multi-orientation product implementation.
+ - Webscarping of products, auto cropping. 
+ 
