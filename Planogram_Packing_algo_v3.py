@@ -1,6 +1,9 @@
-import pandas as pd
+import pandas as pd, os
 import matplotlib.pyplot as plt
 from math import ceil
+import cv2, numpy as np
+
+
 class Product:
     def __init__(self, id, width, height):
         self.id = id
@@ -37,6 +40,11 @@ class Bin:
 
 def fit_products_into_bins(products, bin_max_width, max_height, total_machine_height, bins = []):
     total_height_used = 0
+
+    if len(bins) != 0:
+        for bin in bins:
+            total_height_used += bin.current_height
+
     skipped_products = []
 
     # sorting by considering both the dimesnisons
@@ -80,6 +88,29 @@ def fit_products_into_bins(products, bin_max_width, max_height, total_machine_he
 
 def simulate_vending_machine(bins, bin_max_width, total_machine_height):
     # Setup plot
+    planogram = np.zeros((total_machine_height*100,bin_max_width*100,3))
+    y_offset = 0; pixel_scale = 100
+    for i, bin in enumerate(bins):
+        bin_height = bin.current_height
+        cv2.rectangle(planogram, (0, y_offset*pixel_scale), (bin_max_width*pixel_scale, (y_offset+bin_height)*pixel_scale), (0,0,255), 10)
+        x_offset = 0
+        for product in bin.products:
+            try:
+                prod_image = cv2.imread(f'./assets/product_images/{product.id}.jpeg')
+            except:
+                prod_image = cv2.imread(f'./assets/product_images/RB84CAN.jpeg')
+            
+            try:   
+                thumbnail = cv2.flip(cv2.resize(prod_image, (product.width*pixel_scale,product.height*pixel_scale), cv2.INTER_AREA), 0)            
+            except:
+                thumbnail = np.zeros((product.height*pixel_scale,product.width*pixel_scale,3))
+            cv2.rectangle(planogram, (x_offset*pixel_scale, y_offset*pixel_scale), ((x_offset+product.width)*pixel_scale, (y_offset+product.height)*pixel_scale), (0,100+i*10,i*10),10)
+            planogram[y_offset*pixel_scale:(y_offset+product.height)*pixel_scale, x_offset*pixel_scale:(x_offset+product.width)*pixel_scale,:] = thumbnail
+            x_offset+=product.width
+            cv2.imwrite('./planogram.jpg', cv2.flip(planogram, 0))     
+        y_offset += bin_height
+
+
     fig, ax = plt.subplots()
 
     y_offset = 0  # Start y_offset from 0 (bottom of the plot)
@@ -129,7 +160,6 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height):
 
     plt.show()
 
-
 def main():
     # products = [
     #     Product(1, 6, 10), Product(2, 4, 4), Product(3, 3, 5), Product(4, 6, 4),
@@ -146,10 +176,10 @@ def main():
 
     product_df = pd.read_csv('./products.csv')
     for i in range(len(product_df)):
-        products.append(Product(product_df.iloc[i].SKU, ceil(product_df.iloc[i].Width/scaling_factor), ceil(product_df.iloc[i].Height/scaling_factor)))
+        products.append(Product(product_df.iloc[i].Name, ceil(product_df.iloc[i].Width/scaling_factor), ceil(product_df.iloc[i].Height/scaling_factor)))
 
     bins = fit_products_into_bins(products, bin_max_width, max_height, total_machine_height)
-    bins = fit_products_into_bins(products, bin_max_width, max_height, total_machine_height, bins)
+    # bins = fit_products_into_bins(products, bin_max_width, max_height, total_machine_height, bins)
     
     for product in products:
         print(product)
@@ -157,11 +187,12 @@ def main():
     print("\nFitted into bins:")
     for bin in bins:
         print(bin)
-    
-    grid_df = simulate_vending_machine(bins, bin_max_width, total_machine_height)
+    image_paths = [file for file in os.listdir('./assets/product_images')]
+    simulate_vending_machine(bins, bin_max_width, total_machine_height)
     print("\nPlanogram Layout")
-    print(grid_df)
-
+    print(len(bins))
+    for bin in bins:
+        print(f"\n{bin}")
 if __name__ == "__main__":
     main()
 
