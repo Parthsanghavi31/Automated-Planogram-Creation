@@ -60,7 +60,7 @@ def fit_products_into_bins(products, bin_max_width, total_machine_height, bins =
     skipped_products = []
 
     # sorting by considering both the dimesnisons
-    products.sort(key=lambda x: (x.width), reverse=True)
+    products.sort(key=lambda x: (x.height), reverse=True)
     # print(products)
 
     for product in products:
@@ -179,7 +179,7 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./
 
     # Display grid for better visualization
     plt.grid(True)
-    plt.savefig(os.path.join(path, filename))
+    # plt.savefig(os.path.join(path, filename))
     plt.close()
     del fig, ax
     # plt.show()
@@ -191,7 +191,7 @@ def main():
     total_machine_height = 25
     scaling_factor = 3.5
     path = './'
-    product_df = pd.read_csv('./assets/products.csv')
+    product_df = pd.read_csv('../assets/products.csv')
     for i in range(len(product_df)):
         products.append(Product(product_df.iloc[i].Name, ceil(product_df.iloc[i].Width/scaling_factor), ceil(product_df.iloc[i].Height/scaling_factor)))
 
@@ -206,7 +206,7 @@ def main():
     # print("\nFitted into bins:")
     # for bin in bins:
         # print(bin)
-    image_paths = [file for file in os.listdir('./assets/product_images')]
+    image_paths = [file for file in os.listdir('../assets/product_images')]
     # simulate_vending_machine(bins, bin_max_width, total_machine_height, path)
     # print("\nPlanogram Layout")
 
