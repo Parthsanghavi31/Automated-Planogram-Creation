@@ -30,5 +30,3 @@ for i in range(num_min_products, num_products_total):
         with open(f'./testobjs/Test_{i}products_{test_num}.tst', 'wb') as f:
             pickle.dump(((bin_max_width, total_machine_height), products[indeces].tolist()), f)
         test_num += 1
-
-

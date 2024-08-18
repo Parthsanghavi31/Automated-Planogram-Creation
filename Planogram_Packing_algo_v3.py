@@ -23,22 +23,34 @@ class Bin:
 
     def can_add_product(self, product):
         return (self.current_width + product.width <= self.max_width and
-                self.current_height + product.height <= self.max_height)
+                product.height <= self.max_height)
 
     def add_product(self, product):
         if self.can_add_product(product):
             self.products.append(product)
             self.current_width += product.width
             self.current_height = max(self.current_height, product.height)
-            print(f"Added Product {product.id} to bin: Current bin dimensions are width={self.current_width}/{self.max_width}, height={self.current_height}/{self.max_height}")
+            # print(f"Added Product {product.id} to bin: Current bin dimensions are width={self.current_width}/{self.max_width}, height={self.current_height}/{self.max_height}")
             return True
-        print(f"Failed to add Product {product.id}: Exceeds bin dimensions with width={product.width}, height={product.height} when added to current width={self.current_width}, height={self.current_height}")
+        # print(f"Failed to add Product {product.id}: Exceeds bin dimensions with width={product.width}, height={product.height} when added to current width={self.current_width}, height={self.current_height}")
         return False
+    
+    def rearrange_bin(self):
+        self.products.sort(key=lambda x: (x.height), reverse=False)
+        n = len(self.products)
+        midpoint = (n//2)+(n%2)
+        indeces = np.arange(n)
+        rearranged_indeces = np.zeros(n)
+        rearranged_indeces[0:midpoint] = indeces[-1::-2]
+        rearranged_indeces[midpoint:] = indeces[0:-1:2]
+        prod_copy = np.array(self.products)[rearranged_indeces.astype(int)]
+        self.products = prod_copy.tolist()
+        del prod_copy
 
     def __repr__(self):
         return f"Bin(width={self.current_width}/{self.max_width}, height={self.current_height}/{self.max_height}, products={self.products})"
 
-def fit_products_into_bins(products, bin_max_width, max_height, total_machine_height, bins = []):
+def fit_products_into_bins(products, bin_max_width, total_machine_height, bins = []):
     total_height_used = 0; added_products = 0
 
     if len(bins) != 0:
@@ -48,29 +60,35 @@ def fit_products_into_bins(products, bin_max_width, max_height, total_machine_he
     skipped_products = []
 
     # sorting by considering both the dimesnisons
-    products.sort(key=lambda x: (x.height * x.width / x.height), reverse=True)
-    print(products)
+    products.sort(key=lambda x: (x.width), reverse=True)
+    # print(products)
 
     for product in products:
         placed = False #Is product placed? Place in existing bins, else create new bin?
         for bin in bins:
-            if bin.can_add_product(product) and total_height_used + bin.current_height <= total_machine_height:
+            if (total_height_used+product.height<=total_machine_height):
                 if bin.add_product(product):
-                    print(product)
+                    # print(product)
                     added_products += 1
                     placed = True
+                    total_height_used = 0
+                    for bin in bins:
+                        total_height_used += bin.current_height
                     break
 
         if not placed:
             if total_height_used + product.height <= total_machine_height:
-                new_bin = Bin(bin_max_width, max_height)
-                if new_bin.add_product(product):
-                    bins.append(new_bin)
-                    total_height_used += new_bin.current_height
+                new_bin = Bin(bin_max_width, total_machine_height-total_height_used)
+                if (total_height_used+product.height<=total_machine_height):
+                    if new_bin.add_product(product):
+                        bins.append(new_bin)
+                        total_height_used += new_bin.current_height
+                        added_products +=1
                 else:
                     skipped_products.append(product)
             else:
                 skipped_products.append(product)
+
     new_placements = False; first_run = True
     while new_placements or first_run:
         first_run = False
@@ -79,12 +97,16 @@ def fit_products_into_bins(products, bin_max_width, max_height, total_machine_he
             placed = False
             for bin in bins:
                 if bin.add_product(product):
-                    placed = True
-                    new_placements = True
-                    break
-            if not placed:
-                print(f"Product {product.id} ultimately could not be placed.")
-
+                        placed = True
+                        new_placements = True
+                        added_products += 1
+                        total_height_used = 0
+                        for bin in bins:
+                            total_height_used += bin.current_height
+                        break
+            # if not placed:
+                # print(f"Product {product.id} ultimately could not be placed.")
+    # simulate_vending_machine(bins, bin_max_width, total_machine_height)
     return bins, added_products
 
 def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./', filename='planogram.jpg'):
@@ -120,6 +142,7 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./
     ax.add_patch(machine_border)
 
     for bin_idx, bin in enumerate(bins):
+        bin.rearrange_bin()
         x_offset = 0  # Reset x_offset for each new bin
 
         # Draw a dark gray border around each bin
@@ -156,13 +179,15 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./
 
     # Display grid for better visualization
     plt.grid(True)
-    plt.savefig(os.path.join(path, filename.replace('.jpg','2.jpg')))
+    plt.savefig(os.path.join(path, filename))
+    plt.close()
+    del fig, ax
     # plt.show()
 
 def main():
     products = []
     bin_max_width = 10
-    max_height = 20
+    
     total_machine_height = 25
     scaling_factor = 3.5
     path = './'
@@ -173,21 +198,28 @@ def main():
     added_products = 1
 
     while added_products != 0:
-        bins, added_products = fit_products_into_bins(products, bin_max_width, max_height, total_machine_height)
+        bins, added_products = fit_products_into_bins(products, bin_max_width, total_machine_height)
     
-    for product in products:
-        print(product)
+    # for product in products:
+        # print(product)
         
-    print("\nFitted into bins:")
-    for bin in bins:
-        print(bin)
+    # print("\nFitted into bins:")
+    # for bin in bins:
+        # print(bin)
     image_paths = [file for file in os.listdir('./assets/product_images')]
-    simulate_vending_machine(bins, bin_max_width, total_machine_height, path)
-    print("\nPlanogram Layout")
+    # simulate_vending_machine(bins, bin_max_width, total_machine_height, path)
+    # print("\nPlanogram Layout")
 
-    print(len(bins))
+    # print(len(bins))
+    # for bin in bins:
+        # print(f"\n{bin}")
+
+    used_height = 0
     for bin in bins:
-        print(f"\n{bin}")
+        used_height += bin.current_height
+
+    assert(used_height <= total_machine_height)
+    
 if __name__ == "__main__":
     main()
 
