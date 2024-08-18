@@ -1,1 +1,4 @@
 logs/*
+tests/test_results/*
+tests/Planogram_Packing_algo_v3.py
+planogram.jpg
