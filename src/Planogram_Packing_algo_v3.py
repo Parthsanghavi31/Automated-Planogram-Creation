@@ -109,32 +109,12 @@ def fit_products_into_bins(products, bin_max_width, total_machine_height, bins =
     # simulate_vending_machine(bins, bin_max_width, total_machine_height)
     return bins, added_products
 
-def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./', filename='planogram.jpg'):
-    # Setup plot
-    # planogram = np.zeros((total_machine_height*100,bin_max_width*100,3))
-    # y_offset = 0; pixel_scale = 100
-    # cv2.rectangle(planogram, (0, 0), (bin_max_width*pixel_scale, total_machine_height*pixel_scale), (255, 255, 255), 15)
-    # for i, bin in enumerate(bins):
-    #     bin_height = bin.current_height
-    #     cv2.rectangle(planogram, (0, y_offset*pixel_scale), (bin_max_width*pixel_scale, (y_offset+bin_height)*pixel_scale), (0,0,255), 10)
-    #     x_offset = 0
-    #     for product in bin.products:
-    #         try:
-    #             prod_image = cv2.imread(f'./assets/product_images/{product.id}.jpeg')
-    #         except:
-    #             prod_image = cv2.imread(f'./assets/product_images/RB84CAN.jpeg')
-            
-    #         try:   
-    #             thumbnail = cv2.flip(cv2.resize(prod_image, (product.width*pixel_scale,product.height*pixel_scale), cv2.INTER_AREA), 0)            
-    #         except:
-    #             thumbnail = np.zeros((product.height*pixel_scale,product.width*pixel_scale,3))
-    #         cv2.rectangle(planogram, (x_offset*pixel_scale, y_offset*pixel_scale), ((x_offset+product.width)*pixel_scale, (y_offset+product.height)*pixel_scale), (0,100+i*10,i*10),10)
-    #         planogram[y_offset*pixel_scale:(y_offset+product.height)*pixel_scale, x_offset*pixel_scale:(x_offset+product.width)*pixel_scale,:] = thumbnail
-    #         x_offset+=product.width
-    #         cv2.imwrite(os.path.join(path,filename), cv2.flip(planogram, 0))     
-    #     y_offset += bin_height
+def simulate_vending_machine(bins, bin_max_width, total_machine_height, fig=None, ax=None, path='./', filename='planogram.jpg'):
+    internal_init = False
+    if fig is None or ax is None:
+        fig, ax = plt.subplots()
+        internal_init = True
 
-    fig, ax = plt.subplots()
     y_offset = 0  # Start y_offset from 0 (bottom of the plot)
     # Draw the overall vending machine border in the darkest shade of gray
     machine_border = plt.Rectangle((0, 0), bin_max_width, total_machine_height, 
@@ -157,8 +137,8 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./
             ax.add_patch(rect)
 
             # Add product ID text in the middle of the rectangle
-            plt.text(x_offset + product.width / 2, y_offset + product.height / 2, f"P{product.id}", 
-                     ha='center', va='center', fontsize=8)
+            plt.text(x_offset + product.width / 2, y_offset + product.height / 2, f"{product.id}", 
+                     ha='center', va='center', fontsize=8, rotation='vertical')
 
             # Move x_offset to the right by the width of the current product
             x_offset += product.width
@@ -180,8 +160,9 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, path='./
     # Display grid for better visualization
     plt.grid(True)
     # plt.savefig(os.path.join(path, filename))
-    plt.close()
-    del fig, ax
+    if internal_init:
+        plt.close()
+    # del fig, ax
     # plt.show()
 
 def main():
