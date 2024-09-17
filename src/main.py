@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import pandas as pd, os
 from math import ceil
 import matplotlib.pyplot as plt
+import tkinter.filedialog as fd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from Planogram_Packing_algo_v3 import Product, Bin, fit_products_into_bins, simulate_vending_machine
 
@@ -19,7 +20,7 @@ class Application(tk.Tk):
         self.configure_gui()
         self.make_widgets()
         os.chdir('/home/anirudhkailaje/Documents/04_Misc/05_SideProjects/Automated-Planogram-Creation/src/')
-        self.load_products('../assets/products.csv')
+        self.load_products()
 
     def configure_styles(self):
         # Theme and styles for ttk
@@ -90,10 +91,23 @@ class Application(tk.Tk):
         ttk.Button(self.left_frame, text="Generate Planogram", command=self.generate_planogram).pack(fill=tk.X, padx=20, pady=5)
         ttk.Button(self.left_frame, text="Save Configuration", command=self.save_configuration).pack(fill=tk.X, padx=20, pady=5)
 
-    def load_products(self, path):
-        df = pd.read_csv(path)
+    def load_products(self, path=None):
+        if not path:  # If no path is provided, ask the user to select a file
+            path = fd.askopenfilename(
+                title="Select Product CSV",
+                filetypes=(("CSV Files", "*.csv"), ("All Files", "*.*")),
+                initialdir=os.getcwd()  # Opens file dialog in the current working directory
+            )
+            if not path:  # If no file is selected, return
+                return
+        
+        df = pd.read_excel(path)
+        df.columns = ['Item Number','1st Description','2nd Description','Depth','Width','Height','Weight']
+        df['Name'] = df['1st Description'] + ' ' + df['2nd Description']
+        df.drop(['1st Description','2nd Description'], axis=1, inplace=True)
         self.products = [Product(row['Name'], ceil(row['Width']), ceil(row['Height'])) for index, row in df.iterrows()]
         self.update_product_listbox()
+        
 
     def update_product_listbox(self):
         self.product_listbox.delete(0, tk.END)
@@ -118,7 +132,10 @@ class Application(tk.Tk):
     def generate_planogram(self):
         bin_max_width = int(self.machine_width_entry.get())
         total_machine_height = int(self.total_height_entry.get())
-        self.bins, added_products = fit_products_into_bins(self.selected_products, bin_max_width, total_machine_height)
+        added_products = 1
+        while added_products != 0:
+            self.bins, added_products = fit_products_into_bins(self.selected_products, bin_max_width, total_machine_height, self.bins)
+
         self.ax.clear()
         simulate_vending_machine(self.bins, bin_max_width, total_machine_height, self.fig, self.ax)
         self.canvas.draw()
@@ -126,7 +143,7 @@ class Application(tk.Tk):
         for bin in self.bins:
             for prod in bin.products:
                 all_prod.append(prod)
-        messagebox.showinfo("Planogram Generated", f"{added_products} out of {len(self.selected_products)} products were fitted into bins.")
+        # messagebox.showinfo("Planogram Generated", f"{added_products} out of {len(self.selected_products)} products were fitted into bins.")
 
     def save_configuration(self):
         messagebox.showinfo("Save Configuration", "Configuration saved successfully.")

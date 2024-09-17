@@ -1,8 +1,8 @@
 ### 2024-08-10
 #### Idea brain dump
 TODO: Arrange.
- - Unit Tests!
- - Manual Priority to be implemented
+ - Unit Tests! Done. 
+ - Manual Priority to be implemented - Not needed.
  - Rendering to be improved. 
  - Aesthetic rearrangement: Bigger Items in the center, smaller items on the side. 
  - Rearrange the bins according to weight?? (Lower the CoG)

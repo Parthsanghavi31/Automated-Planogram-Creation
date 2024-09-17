@@ -19,6 +19,7 @@ class Bin:
         self.max_height = max_height
         self.current_width = 0
         self.current_height = 0
+        self.total_area = 0
         self.products = []
 
     def can_add_product(self, product):
@@ -60,7 +61,7 @@ def fit_products_into_bins(products, bin_max_width, total_machine_height, bins =
     skipped_products = []
 
     # sorting by considering both the dimesnisons
-    products.sort(key=lambda x: (x.height), reverse=True)
+    products.sort(key=lambda x: (x.width), reverse=True)
     # print(products)
 
     for product in products:
@@ -107,6 +108,10 @@ def fit_products_into_bins(products, bin_max_width, total_machine_height, bins =
             # if not placed:
                 # print(f"Product {product.id} ultimately could not be placed.")
     # simulate_vending_machine(bins, bin_max_width, total_machine_height)
+
+    for bin in bins:
+        bin.total_area = np.array([pr.width*pr.height for pr in bin.products]).sum()
+    bins.sort(key = lambda x: x.total_area, reverse = True)
     return bins, added_products
 
 def simulate_vending_machine(bins, bin_max_width, total_machine_height, fig=None, ax=None, path='./', filename='planogram.jpg'):
@@ -159,7 +164,7 @@ def simulate_vending_machine(bins, bin_max_width, total_machine_height, fig=None
 
     # Display grid for better visualization
     plt.grid(True)
-    # plt.savefig(os.path.join(path, filename))
+    plt.savefig(os.path.join(path, filename))
     if internal_init:
         plt.close()
     # del fig, ax

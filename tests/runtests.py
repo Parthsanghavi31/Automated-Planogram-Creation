@@ -2,7 +2,7 @@ import numpy as np, shutil, tqdm
 import pandas as pd, os, pickle, math
 
 os.chdir('/home/anirudhkailaje/Documents/04_Misc/05_SideProjects/Automated-Planogram-Creation/tests/')
-shutil.copy('../Planogram_Packing_algo_v3.py', './Planogram_Packing_algo_v3.py')
+shutil.copy('../src/Planogram_Packing_algo_v3.py', './Planogram_Packing_algo_v3.py')
 
 from Planogram_Packing_algo_v3 import *
 
