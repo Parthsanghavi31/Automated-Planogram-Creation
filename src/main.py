@@ -19,7 +19,7 @@ class Application(tk.Tk):
         self.selected_products = []
         self.configure_gui()
         self.make_widgets()
-        os.chdir('/home/anirudhkailaje/Documents/04_Misc/05_SideProjects/Automated-Planogram-Creation/src/')
+        os.chdir('src/')
         self.load_products()
 
     def configure_styles(self):
