@@ -17,7 +17,7 @@ class Application(tk.Tk):
         self.products = []
         self.bins = []
         self.selected_products = []
-        self.configure_gui()
+        self.confgure_gui()
         self.make_widgets()
         os.chdir('src/')
         self.load_products()
